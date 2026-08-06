@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Scientific Calculator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #07152c, #152f57);
+    color: white;
+}
+
+.app {
+    width: 95%;
+    max-width: 430px;
+    background: #101b30;
+    padding: 18px;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+    font-size: 22px;
+    margin: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #9eb8dc;
+    margin-bottom: 15px;
+}
+
+.display {
+    width: 100%;
+    min-height: 100px;
+    background: #07101f;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-x: auto;
+}
+
+#expression {
+    color: #a9c8ff;
+    font-size: 20px;
+    min-height: 30px;
+    text-align: right;
+}
+
+#result {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 12px;
+}
+
+.voice-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#voiceButton {
+    flex: 1;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 16px;
+    background: #246bff;
+    color: white;
+}
+
+#voiceButton.listening {
+    background: #e63946;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+#voiceText {
+    flex: 2;
+    background: #1d2b43;
+    padding: 13px;
+    border-radius: 14px;
+    color: #c9d8ef;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 15px 5px;
+    font-size: 16px;
+    background: #263752;
+    color: white;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.operator {
+    background: #315fba;
+}
+
+.function {
+    background: #3c4960;
+    color: #7ed6ff;
+}
+
+.equal {
+    background: #16a36a;
+}
+
+.clear {
+    background: #d83b4b;
+}
+
+.ai-box {
+    margin-top: 15px;
+    background: #17243a;
+    padding: 13px;
+    border-radius: 15px;
+}
+
+.ai-box h3 {
+    margin: 0 0 8px;
+}
+
+#aiResponse {
+    color: #c7d6ec;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>🤖 AI Scientific Calculator</h1>
+
+<p class="subtitle">
+Calculate, speak, and get explanations
+</p>
+
+<div class="display">
+    <div id="expression">0</div>
+    <div id="result">0</div>
+</div>
+
+<div class="voice-area">
+
+<button id="voiceButton" onclick="startVoice()">
+🎤 Speak
+</button>
+
+<div id="voiceText">
+Press the microphone and say a calculation.
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button class="clear" onclick="clearCalculator()">C</button>
+<button class="function" onclick="addToExpression('sin(')">sin</button>
+<button class="function" onclick="addToExpression('cos(')">cos</button>
+<button class="function" onclick="addToExpression('tan(')">tan</button>
+<button class="function" onclick="addToExpression('sqrt(')">√</button>
+
+<button class="function" onclick="addToExpression('log(')">log</button>
+<button class="function" onclick="addToExpression('pi')">π</button>
+<button class="function" onclick="addToExpression('(')">(</button>
+<button class="function" onclick="addToExpression(')')">)</button>
+<button class="clear" onclick="deleteLast()">⌫</button>
+
+<button onclick="addToExpression('7')">7</button>
+<button onclick="addToExpression('8')">8</button>
+<button onclick="addToExpression('9')">9</button>
+<button class="operator" onclick="addToExpression('/')">÷</button>
+<button class="function" onclick="addToExpression('**')">xʸ</button>
+
+<button onclick="addToExpression('4')">4</button>
+<button onclick="addToExpression('5')">5</button>
+<button onclick="addToExpression('6')">6</button>
+<button class="operator" onclick="addToExpression('*')">×</button>
+<button class="function" onclick="addToExpression('**2')">x²</button>
+
+<button onclick="addToExpression('1')">1</button>
+<button onclick="addToExpression('2')">2</button>
+<button onclick="addToExpression('3')">3</button>
+<button class="operator" onclick="addToExpression('-')">−</button>
+<button class="equal" onclick="calculate()">=</button>
+
+<button onclick="addToExpression('0')">0</button>
+<button onclick="addToExpression('.')">.</button>
+<button onclick="addToExpression('%')">%</button>
+<button class="operator" onclick="addToExpression('+')">+</button>
+<button class="equal" onclick="calculate()">=</button>
+
+</div>
+
+<div class="ai-box">
+
+<h3>🧠 AI Assistant</h3>
+
+<div id="aiResponse">
+Hello! I can calculate your mathematics and explain the answer.
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let expression = "";
+
+const expressionDisplay =
+document.getElementById("expression");
+
+const resultDisplay =
+document.getElementById("result");
+
+const voiceText =
+document.getElementById("voiceText");
+
+const aiResponse =
+document.getElementById("aiResponse");
+
+
+function addToExpression(value) {
+
+    expression += value;
+
+    expressionDisplay.innerText =
+    expression || "0";
+
+}
+
+
+function clearCalculator() {
+
+    expression = "";
+
+    expressionDisplay.innerText = "0";
+
+    resultDisplay.innerText = "0";
+
+    aiResponse.innerText =
+    "Calculator cleared.";
+
+}
+
+
+function deleteLast() {
+
+    expression =
+    expression.slice(0, -1);
+
+    expressionDisplay.innerText =
+    expression || "0";
+
+}
+
+
+function calculate() {
+
+    try {
+
+        let calculation =
+        expression
+        .replaceAll("pi", "Math.PI")
+        .replaceAll("sqrt", "Math.sqrt")
+        .replaceAll("sin", "Math.sin")
+        .replaceAll("cos", "Math.cos")
+        .replaceAll("tan", "Math.tan")
+        .replaceAll("log", "Math.log10");
+
+        let answer =
+        Function(
+        '"use strict"; return (' +
+        calculation + ')'
+        )();
+
+        if (
+        !Number.isFinite(answer)
+        ) {
+
+            throw new Error();
+
+        }
+
+        resultDisplay.innerText =
+        Number(answer.toFixed(10));
+
+        aiResponse.innerText =
+        "The answer is " +
+        Number(answer.toFixed(10)) +
+        ". I calculated " +
+        expression + ".";
+
+        speak(
+        "The answer is " +
+        Number(answer.toFixed(10))
+        );
+
+    }
+
+    catch {
+
+        resultDisplay.innerText =
+        "Error";
+
+        aiResponse.innerText =
+        "I could not understand that calculation.";
+
+        speak(
+        "I could not understand that calculation."
+        );
+
+    }
+
+}
+
+
+function speak(text) {
+
+    if (
+    "speechSynthesis"
+    in window
+    ) {
+
+        window.speechSynthesis.cancel();
+
+        let speech =
+        new SpeechSynthesisUtterance(
+        text
+        );
+
+        speech.rate = 0.95;
+
+        window.speechSynthesis
+        .speak(speech);
+
+    }
+
+}
+
+
+function startVoice() {
+
+    const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        voiceText.innerText =
+        "Voice recognition is not supported in this browser.";
+
+        return;
+
+    }
+
+
+    const recognition =
+    new SpeechRecognition();
+
+    recognition.lang = "en-US";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+
+    const voiceButton =
+    document.getElementById(
+    "voiceButton"
+    );
+
+
+    recognition.start();
+
+    voiceButton.innerText =
+    "🔴 Listening...";
+
+    voiceButton.classList
+    .add("listening");
+
+    voiceText.innerText =
+    "Speak now...";
+
+
+    recognition.onresult =
+    function(event) {
+
+        let spokenText =
+        event.results[0][0]
+        .transcript
+        .toLowerCase();
+
+        voiceText.innerText =
+        "You said: " +
+        spokenText;
+
+        processVoice(
+        spokenText
+        );
+
+    };
+
+
+    recognition.onend =
+    function() {
+
+        voiceButton.innerText =
+        "🎤 Speak";
+
+        voiceButton.classList
+        .remove("listening");
+
+    };
+
+
+    recognition.onerror =
+    function() {
+
+        voiceText.innerText =
+        "Voice input failed. Try again.";
+
+    };
+
+}
+
+
+function processVoice(text) {
+
+    let command = text;
+
+    command =
+    command.replaceAll(
+    "plus", "+"
+    );
+
+    command =
+    command.replaceAll(
+    "minus", "-"
+    );
+
+    command =
+    command.replaceAll(
+    "times", "*"
+    );
+
+    command =
+    command.replaceAll(
+    "multiplied by", "*"
+    );
+
+    command =
+    command.replaceAll(
+    "divided by", "/"
+    );
+
+    command =
+    command.replaceAll(
+    "over", "/"
+    );
+
+    command =
+    command.replaceAll(
+    "to the power of", "**"
+    );
+
+    command =
+    command.replaceAll(
+    "squared", "**2"
+    );
+
+    command =
+    command.replaceAll(
+    "square root of",
+    "sqrt("
+    );
+
+    command =
+    command.replaceAll(
+    "calculate", ""
+    );
+
+    command =
+    command.replaceAll(
+    "what is", ""
+    );
+
+    command =
+    command.replaceAll(
+    "what's", ""
+    );
+
+    command =
+    command.replaceAll(
+    "?", ""
+    );
+
+    command =
+    command.trim();
+
+
+    if (
+    command.includes("hello")
+    ) {
+
+        aiResponse.innerText =
+        "Hello! I am your AI Scientific Calculator.";
+
+        speak(
+        "Hello! I am your AI Scientific Calculator."
+        );
+
+        return;
+
+    }
+
+
+    if (
+    command.includes(
+    "clear"
+    )
+    ) {
+
+        clearCalculator();
+
+        speak(
+        "Calculator cleared."
+        );
+
+        return;
+
+    }
+
+
+    expression = command;
+
+    expressionDisplay.innerText =
+    expression;
+
+    calculate();
+
+}
+
+</script>
+
+</body>
+</html>

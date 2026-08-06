@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>AI Scientific Calculator</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+    linear-gradient(135deg,
+    #081120,
+    #102a43,
+    #071b2d);
+
+    color: white;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+header p {
+    color: #8ed7ff;
+}
+
+.main {
+    width: 95%;
+    max-width: 1000px;
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap: 20px;
+}
+
+.card {
+    background:
+    rgba(255,255,255,0.08);
+
+    border:
+    1px solid
+    rgba(255,255,255,0.15);
+
+    border-radius: 22px;
+
+    padding: 18px;
+
+    backdrop-filter:
+    blur(12px);
+
+    box-shadow:
+    0 15px 40px
+    rgba(0,0,0,0.35);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.display {
+    width: 100%;
+
+    border: none;
+
+    border-radius: 15px;
+
+    padding: 18px;
+
+    font-size: 25px;
+
+    background: #020b14;
+
+    color: #66e0ff;
+
+    text-align: right;
+
+    outline: none;
+}
+
+.result {
+    min-height: 45px;
+
+    margin-top: 10px;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background:
+    rgba(0,0,0,0.3);
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    text-align: right;
+}
+
+.buttons {
+    margin-top: 15px;
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(5, 1fr);
+
+    gap: 9px;
+}
+
+button {
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 15px 5px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background:
+    rgba(255,255,255,0.12);
+
+    cursor: pointer;
+}
+
+button:active {
+    transform:
+    scale(0.94);
+}
+
+.operator {
+    background:
+    #1565c0;
+}
+
+.equal {
+    background:
+    #00a86b;
+}
+
+.clear {
+    background:
+    #c62828;
+}
+
+.ai-box {
+    height: 330px;
+
+    overflow-y: auto;
+
+    padding: 12px;
+
+    border-radius: 15px;
+
+    background:
+    rgba(0,0,0,0.3);
+}
+
+.message {
+    margin: 10px 0;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    line-height: 1.5;
+}
+
+.user {
+    background:
+    #145da0;
+
+    margin-left: 25px;
+}
+
+.bot {
+    background:
+    #18344a;
+
+    margin-right: 25px;
+}
+
+.ai-input {
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-size: 16px;
+
+    outline: none;
+}
+
+.ai-buttons {
+    display: grid;
+
+    grid-template-columns:
+    1fr 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.send {
+    background:
+    #1565c0;
+}
+
+.voice {
+    background:
+    #8e24aa;
+}
+
+.speaker {
+    background:
+    #00897b;
+}
+
+.status {
+    text-align: center;
+
+    margin-top: 12px;
+
+    color: #8ed7ff;
+}
+
+@media(max-width: 750px) {
+
+.main {
+    grid-template-columns:
+    1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🧮 AI SCIENTIFIC CALCULATOR</h1>
+
+<p>
+Calculate • Ask • Speak • Learn
+</p>
+
+</header>
+
+
+<div class="main">
+
+
+<!-- CALCULATOR -->
+
+<div class="card">
+
+<h2>
+Scientific Calculator
+</h2>
+
+<input
+id="display"
+class="display"
+placeholder="0"
+readonly>
+
+<div
+id="result"
+class="result">
+
+Answer: 0
+
+</div>
+
+
+<div class="buttons">
+
+<button onclick="add('sin(')">
+sin
+</button>
+
+<button onclick="add('cos(')">
+cos
+</button>
+
+<button onclick="add('tan(')">
+tan
+</button>
+
+<button onclick="add('log(')">
+log
+</button>
+
+<button onclick="add('sqrt(')">
+√
+</button>
+
+
+<button onclick="add('(')">
+(
+</button>
+
+<button onclick="add(')')">
+)
+</button>
+
+<button onclick="add('pi')">
+π
+</button>
+
+<button onclick="add('e')">
+e
+</button>
+
+<button onclick="add('^')">
+xʸ
+</button>
+
+
+<button onclick="add('7')">
+7
+</button>
+
+<button onclick="add('8')">
+8
+</button>
+
+<button onclick="add('9')">
+9
+</button>
+
+<button
+class="operator"
+onclick="add('/')">
+
+÷
+
+</button>
+
+<button
+class="clear"
+onclick="clearDisplay()">
+
+C
+
+</button>
+
+
+<button onclick="add('4')">
+4
+</button>
+
+<button onclick="add('5')">
+5
+</button>
+
+<button onclick="add('6')">
+6
+</button>
+
+<button
+class="operator"
+onclick="add('*')">
+
+×
+
+</button>
+
+<button onclick="backspace()">
+
+⌫
+
+</button>
+
+
+<button onclick="add('1')">
+1
+</button>
+
+<button onclick="add('2')">
+2
+</button>
+
+<button onclick="add('3')">
+3
+</button>
+
+<button
+class="operator"
+onclick="add('-')">
+
+−
+
+</button>
+
+<button
+class="equal"
+onclick="calculate()">
+
+=
+
+</button>
+
+
+<button onclick="add('0')">
+0
+</button>
+
+<button onclick="add('.')">
+.
+</button>
+
+<button onclick="add('%')">
+%
+</button>
+
+<button
+class="operator"
+onclick="add('+')">
+
++
+
+</button>
+
+<button onclick="add('**2')">
+
+x²
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- AI ASSISTANT -->
+
+<div class="card">
+
+<h2>
+🤖 AI Assistant
+</h2>
+
+<div
+id="chat"
+class="ai-box">
+
+<div class="message bot">
+
+Hello! I am your AI Calculator Assistant.
+
+You can ask:
+
+“Calculate 25 multiplied by 8”
+
+or:
+
+“Find the square root of 144”
+
+</div>
+
+</div>
+
+
+<input
+id="aiInput"
+class="ai-input"
+
+placeholder=
+"Ask the AI assistant...">
+
+<div class="ai-buttons">
+
+<button
+class="send"
+onclick="sendMessage()">
+
+Send
+
+</button>
+
+
+<button
+class="voice"
+id="voiceButton"
+onclick="startVoice()">
+
+🎤 Speak
+
+</button>
+
+
+<button
+class="speaker"
+onclick="speakLast()">
+
+🔊 Speak
+
+</button>
+
+</div>
+
+
+<div
+id="status"
+class="status">
+
+AI Assistant Ready
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let lastAnswer =
+"Hello, I am your AI Calculator Assistant.";
+
+
+function add(value) {
+
+let display =
+document.getElementById("display");
+
+display.value += value;
+
+}
+
+
+function clearDisplay() {
+
+document
+.getElementById("display")
+.value = "";
+
+document
+.getElementById("result")
+.innerText =
+"Answer: 0";
+
+}
+
+
+function backspace() {
+
+let display =
+document.getElementById("display");
+
+display.value =
+display.value.slice(0,-1);
+
+}
+
+
+async function calculate() {
+
+let expression =
+document
+.getElementById("display")
+.value;
+
+if (!expression) {
+return;
+}
+
+document
+.getElementById("result")
+.innerText =
+"Calculating...";
+
+
+let response =
+await fetch("/calculate", {
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+expression:
+expression
+})
+
+});
+
+
+let data =
+await response.json();
+
+
+if (data.success) {
+
+document
+.getElementById("result")
+.innerText =
+"Answer: " +
+data.result;
+
+lastAnswer =
+"The answer is " +
+data.result;
+
+}
+else {
+
+document
+.getElementById("result")
+.innerText =
+"Error";
+
+}
+
+}
+
+
+function addMessage(
+text,
+type
+) {
+
+let chat =
+document
+.getElementById("chat");
+
+let message =
+document
+.createElement("div");
+
+message.className =
+"message " +
+type;
+
+message.innerText =
+text;
+
+chat.appendChild(
+message
+);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+
+async function sendMessage() {
+
+let input =
+document
+.getElementById("aiInput");
+
+let message =
+input.value.trim();
+
+if (!message) {
+return;
+}
+
+addMessage(
+message,
+"user"
+);
+
+input.value = "";
+
+document
+.getElementById("status")
+.innerText =
+"AI is thinking...";
+
+
+let response =
+await fetch("/assistant", {
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+message:
+message
+})
+
+});
+
+
+let data =
+await response.json();
+
+
+addMessage(
+data.answer,
+"bot"
+);
+
+
+lastAnswer =
+data.answer;
+
+
+if (
+data.calculation
+) {
+
+document
+.getElementById("result")
+.innerText =
+"AI Answer: " +
+data.result;
+
+}
+
+
+document
+.getElementById("status")
+.innerText =
+"AI Assistant Ready";
+
+}
+
+
+async function startVoice() {
+
+let button =
+document
+.getElementById(
+"voiceButton"
+);
+
+let status =
+document
+.getElementById(
+"status"
+);
+
+
+button.innerText =
+"Listening...";
+
+status.innerText =
+"Speak now...";
+
+
+try {
+
+let response =
+await fetch("/voice", {
+
+method:
+"POST"
+
+});
+
+
+let data =
+await response.json();
+
+
+if (
+data.success
+) {
+
+document
+.getElementById(
+"aiInput"
+).value =
+data.text;
+
+
+status.innerText =
+"You said: " +
+data.text;
+
+
+sendMessage();
+
+}
+else {
+
+status.innerText =
+"Voice error: " +
+data.error;
+
+}
+
+}
+catch(error) {
+
+status.innerText =
+"Voice connection failed.";
+
+}
+
+
+button.innerText =
+"🎤 Speak";
+
+}
+
+
+async function speakLast() {
+
+await fetch("/speak", {
+
+method:
+"POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+text:
+lastAnswer
+})
+
+});
+
+}
+
+
+document
+.getElementById("aiInput")
+.addEventListener(
+"keypress",
+function(event) {
+
+if (
+event.key === "Enter"
+) {
+
+sendMessage();
+
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>

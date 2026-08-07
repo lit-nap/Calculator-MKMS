@@ -109,20 +109,20 @@ fullscreen = 0
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 34
-
+android.api = 34
+ 
 # (int) Minimum API your APK / AAB will support.
-#android.minapi = 24
-
+android.minapi = 24
+ 
 # (int) Android SDK version to use
-#android.sdk = 34
-
+android.sdk = 34
+ 
 # (str) Android NDK version to use
-#android.ndk = 25b
-
+android.ndk = 25b
+ 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-#android.ndk_api = 21
-
+android.ndk_api = 21
+ 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
 #android.ndk_path =
 
@@ -141,8 +141,8 @@ fullscreen = 0
 # agreements. This is intended for automation only. If set to False,
 # the default, you will be shown the license when first running
 # buildozer.
-# android.accept_sdk_license = True
-
+android.accept_sdk_license = True
+  
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.kivy.android.PythonActivity
 

@@ -121,7 +121,7 @@ android.sdk = 34
 android.ndk = 25b
  
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-android.ndk_api = 21
+android.ndk_api = 24
  
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
 #android.ndk_path =
